@@ -64,6 +64,27 @@ namespace EmployeePayrollUsingThreads
             employeePayrollDetailList.Add(emp);
         }
 
+        /* UC2:- Ability to add multiple employee to payroll DB using Threads so as to get a better response
+                 - Use the payroll_service database created in MS SQL
+                 - Ensure addEmployeeToPayroll is part of its own execution thread
+                 - Record the start and stop time to essentially determine the time taken for the execution 
+                 using Thread and without Thread to check the performance.
+        */
+        public void addEmployeeToPayrollWithThread(List<EmployeeDetails> employeePayrollDataList)
+        {
+            employeePayrollDataList.ForEach(employeeData =>
+            {
+                Task thread = new Task(() =>
+                {
+                    Console.WriteLine(" Employee being added: " + employeeData.EmployeeName);
+                    this.addEmployeePayroll(employeeData);
+                    Console.WriteLine(" Employee added: " + employeeData.EmployeeName);
+                });
+                thread.Start();
+            });
+            Console.WriteLine(this.employeePayrollDetailList.Count);
+        }
+
         public bool AddEmployeeToDataBase(EmployeeDetails model)
         {
             try
